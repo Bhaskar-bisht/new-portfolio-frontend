@@ -3,20 +3,20 @@
 import { useEffect, useState } from "react";
 import {
     RiArrowRightLine,
-    RiCodeBoxLine,
     RiDownloadLine,
-    RiFolderLine,
     RiGithubLine,
     RiGlobalLine,
     RiLinkedinLine,
     RiStackOverflowLine,
-    RiStarLine,
-    RiTimeLine,
     RiTwitterXLine,
 } from "react-icons/ri";
 import { Link } from "react-router-dom";
 import { useReveal } from "../hooks/useReveal";
 import { getAbout, getProjects } from "../utils/api";
+
+import homeIcon1 from "../assets/homeicon1.png";
+import homeIcon2 from "../assets/homeicon2.png";
+import homeIcon3 from "../assets/homeicon3.png";
 
 const PLATFORM_CONFIG = {
     github: { icon: RiGithubLine, badge: "#e8f0fe", color: "#1a1a2e" },
@@ -157,42 +157,43 @@ export default function Home() {
 
             {/* Stats strip */}
             <section className="max-w-4xl mx-auto w-full">
-                <div className="reveal grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="reveal grid grid-cols-2 md:grid-cols-3 gap-4">
                     {[
                         {
                             number: profile?.yearsOfExperience ? `${profile.yearsOfExperience}+` : "—",
                             label: "Years Experience",
                             color: "var(--pastel-pink)",
-                            icon: RiTimeLine,
+                            img: homeIcon1,
                         },
                         {
                             number: totalProjects !== null ? `${totalProjects}+` : "—",
                             label: "Projects Completed",
                             color: "var(--pastel-peach)",
-                            icon: RiFolderLine,
+                            img: homeIcon2,
                         },
                         {
                             number: profile?.skills?.length ? `${profile.skills.length}+` : "—",
                             label: "Technologies",
                             color: "var(--pastel-mint)",
-                            icon: RiCodeBoxLine,
+                            img: homeIcon3,
                         },
-                        {
-                            number: "100%",
-                            label: "Client Satisfaction",
-                            color: "var(--pastel-lavender)",
-                            icon: RiStarLine,
-                        },
-                    ].map(({ number, label, color, icon: StatIcon }, i) => (
+                        // {
+                        //     number: "100%",
+                        //     label: "Client Satisfaction",
+                        //     color: "var(--pastel-lavender)",
+                        //     icon: RiStarLine,
+                        // },
+                    ].map(({ number, label, color, img }, i) => (
                         <div
                             key={label}
                             className={`card-glass p-6 text-center reveal reveal-delay-${i + 1}`}
                             style={{ background: color, border: "1px solid rgba(255,255,255,0.6)" }}
                         >
-                            <StatIcon
-                                size={18}
+                            <img
+                                src={img}
+                                alt={label}
                                 className="mx-auto mb-2"
-                                style={{ color: "var(--text-secondary)", opacity: 0.6 }}
+                                style={{ width: "30px", height: "30px", objectFit: "contain" }}
                             />
                             <div
                                 className="font-bold mb-1"

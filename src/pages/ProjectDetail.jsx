@@ -1,8 +1,16 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import { RiArrowLeftLine, RiCalendarLine, RiExternalLinkLine, RiGroupLine, RiStarLine } from "react-icons/ri";
+import {
+    RiArrowLeftLine,
+    RiCalendarLine,
+    RiExternalLinkLine,
+    RiGroupLine,
+    RiStarLine,
+    RiUserLine,
+} from "react-icons/ri";
 import { Link, useParams } from "react-router-dom";
+import ImageSlider from "../components/ImageSlider";
 import { useReveal } from "../hooks/useReveal";
 import { getProject } from "../utils/api";
 
@@ -45,184 +53,198 @@ export default function ProjectDetail() {
                             </Link>
                         </div>
 
-                        {/* Banner */}
-                        {project.banner?.url && (
-                            <div
-                                className="reveal reveal-delay-1 w-full rounded-2xl overflow-hidden mb-8 cursor-pointer"
-                                style={{ height: "clamp(200px, 35vw, 420px)", boxShadow: "var(--shadow-lg)" }}
-                                onClick={() => setLightbox(project.banner.url)}
-                            >
-                                <img
-                                    src={project.banner.url}
-                                    alt={`${project.title} banner`}
-                                    className="w-full h-full object-cover"
-                                    style={{ transition: "transform 0.5s ease" }}
-                                    onMouseEnter={(e) => (e.target.style.transform = "scale(1.03)")}
-                                    onMouseLeave={(e) => (e.target.style.transform = "scale(1)")}
-                                />
-                            </div>
-                        )}
-
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {/* Main Content */}
-                            <div className="lg:col-span-2 space-y-6">
-                                {/* Title Card */}
+                        {/* Top — 40/60 split */}
+                        <div className="reveal reveal-delay-1 grid grid-cols-1 lg:grid-cols-5 gap-14 mb-8">
+                            {/* Left 40% — Title card only */}
+                            <div className="lg:col-span-2">
                                 <div
-                                    className="reveal card-glass p-6"
-                                    style={{ background: "#fce4ec", border: "1px solid rgba(255,255,255,0.7)" }}
+                                    className="card-glass p-6 h-full"
+                                    style={{
+                                        background: "var(--pastel-sky)",
+                                        border: "1px solid rgba(255,255,255,0.7)",
+                                    }}
                                 >
-                                    <div className="flex flex-wrap items-start justify-between gap-4">
-                                        <div className="flex-1">
-                                            <div className="flex flex-wrap gap-2 mb-3">
-                                                {project.projectType && (
-                                                    <span
-                                                        className="tag"
-                                                        style={{
-                                                            background: "rgba(255,255,255,0.6)",
-                                                            color: "var(--text-secondary)",
-                                                            fontSize: "11px",
-                                                        }}
-                                                    >
-                                                        {project.projectType}
-                                                    </span>
-                                                )}
-                                                {project.status && (
-                                                    <span
-                                                        className="tag"
-                                                        style={{
-                                                            background:
-                                                                project.status === "completed" ? "#e8f5e9" : "#fff9c4",
-                                                            color:
-                                                                project.status === "completed" ? "#388e3c" : "#f57f17",
-                                                            fontSize: "11px",
-                                                        }}
-                                                    >
-                                                        {project.status}
-                                                    </span>
-                                                )}
-                                                {project.featured && (
-                                                    <span
-                                                        className="tag inline-flex items-center gap-1"
-                                                        style={{
-                                                            background: "#fff3e0",
-                                                            color: "#e65100",
-                                                            fontSize: "11px",
-                                                        }}
-                                                    >
-                                                        <RiStarLine size={11} /> Featured
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <h1
-                                                className="section-heading"
-                                                style={{ fontSize: "clamp(22px, 4vw, 34px)" }}
+                                    <div className="flex flex-wrap gap-2 mb-3">
+                                        {project.projectType && (
+                                            <span
+                                                className="tag"
+                                                style={{
+                                                    background: "var(--accent-light)",
+                                                    color: "var(--accent)",
+                                                    fontSize: "11px",
+                                                }}
                                             >
-                                                {project.title}
-                                            </h1>
-                                        </div>
+                                                {project.projectType}
+                                            </span>
+                                        )}
+                                        {project.status && (
+                                            <span
+                                                className="tag"
+                                                style={{
+                                                    background: project.status === "completed" ? "#e8f5e9" : "#fff9c4",
+                                                    color: project.status === "completed" ? "#388e3c" : "#f57f17",
+                                                    fontSize: "11px",
+                                                }}
+                                            >
+                                                {project.status}
+                                            </span>
+                                        )}
+                                        {project.featured && (
+                                            <span
+                                                className="tag inline-flex items-center gap-1"
+                                                style={{ background: "#fff3e0", color: "#e65100", fontSize: "11px" }}
+                                            >
+                                                <RiStarLine size={11} /> Featured
+                                            </span>
+                                        )}
+                                    </div>
+                                    <h1 className="section-heading mb-3" style={{ fontSize: "clamp(20px, 3vw, 28px)" }}>
+                                        {project.title}
+                                    </h1>
+                                    {project.shortDescription && (
+                                        <p
+                                            className="text-sm leading-relaxed mb-4"
+                                            style={{ color: "var(--text-secondary)" }}
+                                        >
+                                            {project.shortDescription}
+                                        </p>
+                                    )}
+                                    <div className="flex gap-2 flex-wrap">
                                         {project.projectUrl && (
                                             <a
-                                                href={project.projectUrl}
+                                                href={
+                                                    project.projectUrl.startsWith("http")
+                                                        ? project.projectUrl
+                                                        : `https://${project.projectUrl}`
+                                                }
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium flex-shrink-0"
+                                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
                                                 style={{
-                                                    background: "rgba(255,255,255,0.6)",
-                                                    border: "1px solid rgba(0,0,0,0.08)",
-                                                    color: "var(--text-primary)",
+                                                    background: "var(--accent-light)",
+                                                    color: "var(--accent)",
+                                                    border: "1px solid var(--border)",
                                                 }}
                                             >
                                                 <RiExternalLinkLine size={15} /> Live Demo
                                             </a>
                                         )}
+                                        {project.demoUrl && project.demoUrl !== project.projectUrl && (
+                                            <a
+                                                href={
+                                                    project.demoUrl.startsWith("http")
+                                                        ? project.demoUrl
+                                                        : `https://${project.demoUrl}`
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium"
+                                                style={{
+                                                    background: "var(--card-bg)",
+                                                    color: "var(--text-secondary)",
+                                                    border: "1px solid var(--border)",
+                                                }}
+                                            >
+                                                <RiExternalLinkLine size={15} /> Demo
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Description */}
-                                <div
-                                    className="reveal reveal-delay-1 card-glass p-6"
-                                    style={{ background: "#ffecd2", border: "1px solid rgba(255,255,255,0.7)" }}
-                                >
-                                    <h3 className="font-semibold text-sm mb-3" style={{ color: "var(--text-primary)" }}>
-                                        About this project
-                                    </h3>
-                                    <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                                        {project.shortDescription ||
-                                            project.longDescription ||
-                                            "No description available."}
-                                    </p>
-                                </div>
-
-                                {/* Gallery */}
-                                {project.gallery?.length > 0 && (
+                            {/* Right 60% — Slider */}
+                            <div
+                                className="lg:col-span-3"
+                                ststyle={{
+                                    width: "100%",
+                                    height: "240px",
+                                    objectFit: "cover",
+                                    display: "block",
+                                }}
+                            >
+                                {project.thumbnail?.url || project.gallery?.length > 0 ? (
+                                    <ImageSlider
+                                        images={[
+                                            ...(project.thumbnail?.url
+                                                ? [{ url: project.thumbnail.url, name: "thumbnail" }]
+                                                : []),
+                                            ...(project.gallery || []),
+                                        ]}
+                                        onImageClick={(url) => setLightbox(url)}
+                                    />
+                                ) : (
                                     <div
-                                        className="reveal reveal-delay-2 card-glass p-6"
-                                        style={{ background: "#e8f5e9", border: "1px solid rgba(255,255,255,0.7)" }}
+                                        className="w-full h-full rounded-2xl flex items-center justify-center"
+                                        style={{
+                                            background: "var(--card-bg)",
+                                            border: "1px solid var(--border)",
+                                            minHeight: "340px",
+                                        }}
+                                    >
+                                        <p style={{ color: "var(--text-muted)", fontSize: "13px" }}>
+                                            No preview available
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Bottom — 2 col: main content + sidebar */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* Main Content */}
+                            <div className="lg:col-span-2 space-y-6">
+                                {project.fullDescription && (
+                                    <div
+                                        className="reveal reveal-delay-1 card-glass p-6"
+                                        style={{ background: "var(--card-bg)", border: "1px solid var(--border)" }}
                                     >
                                         <h3
-                                            className="font-semibold text-sm mb-4"
+                                            className="font-semibold text-sm mb-3"
                                             style={{ color: "var(--text-primary)" }}
                                         >
-                                            Gallery
+                                            Full Description
                                         </h3>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                            {project.gallery.map((img, i) => (
-                                                <div
-                                                    key={img._id || i}
-                                                    className="img-overlay rounded-xl cursor-pointer"
-                                                    style={{ height: "120px" }}
-                                                    onClick={() => setLightbox(img.url)}
+                                        <p
+                                            className="text-sm leading-relaxed whitespace-pre-line"
+                                            style={{ color: "var(--text-secondary)" }}
+                                        >
+                                            {project.fullDescription}
+                                        </p>
+                                    </div>
+                                )}
+
+                                {project.features?.length > 0 && (
+                                    <div
+                                        className="reveal reveal-delay-2 card-glass p-6"
+                                        style={{ background: "var(--card-bg)", border: "1px solid var(--border)" }}
+                                    >
+                                        <h3
+                                            className="font-semibold text-sm mb-3"
+                                            style={{ color: "var(--text-primary)" }}
+                                        >
+                                            Features
+                                        </h3>
+                                        <ul className="flex flex-col gap-2">
+                                            {project.features.map((f, i) => (
+                                                <li
+                                                    key={i}
+                                                    className="flex items-start gap-2 text-sm"
+                                                    style={{ color: "var(--text-secondary)" }}
                                                 >
-                                                    <img
-                                                        src={img.url}
-                                                        alt={img.name || `Gallery ${i + 1}`}
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                    <div
-                                                        className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200 rounded-xl"
-                                                        style={{ background: "rgba(26,26,46,0.4)" }}
-                                                    >
-                                                        <span className="text-white text-xs">View</span>
-                                                    </div>
-                                                </div>
+                                                    <span style={{ color: "var(--accent)", marginTop: "2px" }}>✦</span>{" "}
+                                                    {f}
+                                                </li>
                                             ))}
-                                        </div>
+                                        </ul>
                                     </div>
                                 )}
                             </div>
 
                             {/* Sidebar */}
                             <div className="space-y-5">
-                                {/* Thumbnail */}
-                                {project.thumbnail?.url && (
-                                    <div
-                                        className="reveal card-glass overflow-hidden"
-                                        style={{ background: "#ede7f6", border: "1px solid rgba(255,255,255,0.7)" }}
-                                    >
-                                        <p
-                                            className="text-xs font-medium px-4 pt-4 pb-2"
-                                            style={{ color: "var(--text-muted)" }}
-                                        >
-                                            Preview
-                                        </p>
-                                        <div
-                                            className="img-overlay cursor-pointer"
-                                            style={{ height: "160px" }}
-                                            onClick={() => setLightbox(project.thumbnail.url)}
-                                        >
-                                            <img
-                                                src={project.thumbnail.url}
-                                                alt="Preview"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Project Info */}
                                 <div
-                                    className="reveal reveal-delay-1 card-glass p-5"
-                                    style={{ background: "#e3f2fd", border: "1px solid rgba(255,255,255,0.7)" }}
+                                    className="reveal card-glass p-5"
+                                    style={{ background: "var(--card-bg)", border: "1px solid var(--border)" }}
                                 >
                                     <h4
                                         className="text-xs font-semibold mb-4 uppercase tracking-wider"
@@ -231,6 +253,23 @@ export default function ProjectDetail() {
                                         Project Info
                                     </h4>
                                     <div className="flex flex-col gap-3">
+                                        {project.clientName && (
+                                            <div className="flex items-center gap-2">
+                                                <RiUserLine
+                                                    size={14}
+                                                    style={{ color: "var(--accent)", flexShrink: 0 }}
+                                                />
+                                                <span className="text-xs" style={{ color: "var(--text-muted)" }}>
+                                                    Client
+                                                </span>
+                                                <span
+                                                    className="ml-auto text-xs font-medium"
+                                                    style={{ color: "var(--text-primary)" }}
+                                                >
+                                                    {project.clientName}
+                                                </span>
+                                            </div>
+                                        )}
                                         {project.startedAt && (
                                             <div className="flex items-center gap-2">
                                                 <RiCalendarLine
@@ -288,7 +327,7 @@ export default function ProjectDetail() {
                                                 </span>
                                             </div>
                                         )}
-                                        {project.viewsCount > 0 && (
+                                        {/* {project.viewsCount > 0 && (
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs" style={{ color: "var(--text-muted)" }}>
                                                     Views
@@ -300,15 +339,14 @@ export default function ProjectDetail() {
                                                     {project.viewsCount}
                                                 </span>
                                             </div>
-                                        )}
+                                        )} */}
                                     </div>
                                 </div>
 
-                                {/* Technologies */}
                                 {project.technologies?.length > 0 && (
                                     <div
-                                        className="reveal reveal-delay-2 card-glass p-5"
-                                        style={{ background: "#fffde7", border: "1px solid rgba(255,255,255,0.7)" }}
+                                        className="reveal reveal-delay-1 card-glass p-5"
+                                        style={{ background: "var(--card-bg)", border: "1px solid var(--border)" }}
                                     >
                                         <h4
                                             className="text-xs font-semibold mb-3 uppercase tracking-wider"
@@ -322,8 +360,8 @@ export default function ProjectDetail() {
                                                     key={i}
                                                     className="tag"
                                                     style={{
-                                                        background: "rgba(255,255,255,0.6)",
-                                                        color: "var(--text-secondary)",
+                                                        background: "var(--accent-light)",
+                                                        color: "var(--accent)",
                                                         fontSize: "11px",
                                                     }}
                                                 >

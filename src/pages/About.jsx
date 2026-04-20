@@ -1,7 +1,7 @@
 /** @format */
 
 import { useEffect, useState } from "react";
-import { RiBriefcaseLine, RiCalendarLine, RiGraduationCapLine } from "react-icons/ri";
+import { RiBriefcaseLine, RiCalendarLine, RiGlobalLine, RiGraduationCapLine } from "react-icons/ri";
 import { useReveal } from "../hooks/useReveal";
 import { getAbout } from "../utils/api";
 
@@ -191,50 +191,87 @@ export default function About() {
                                 >
                                     Education
                                 </h3>
-                                <div className="flex flex-col gap-4">
-                                    {profile.educations.map((edu, i) => (
-                                        <div
-                                            key={edu._id || i}
-                                            className="card-glass p-5"
-                                            style={{
-                                                background: "var(--pastel-lavender)",
-                                                border: "1px solid rgba(255,255,255,0.7)",
-                                            }}
-                                        >
-                                            <div className="flex items-start gap-4">
+                                <div className="relative">
+                                    <div
+                                        className="absolute right-5 top-0 bottom-0 w-px"
+                                        style={{ background: "linear-gradient(to bottom, var(--accent), transparent)" }}
+                                    />
+                                    <div className="flex flex-col gap-5">
+                                        {profile.educations.map((edu, i) => (
+                                            <div key={edu._id || i} className="flex gap-6 pr-14 relative">
                                                 <div
-                                                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                                                    style={{ background: "rgba(255,255,255,0.6)" }}
+                                                    className="absolute right-3.5 top-2 w-3 h-3 rounded-full border-2 border-white"
+                                                    style={{
+                                                        background: "var(--accent)",
+                                                        boxShadow: "0 0 0 3px var(--accent-light)",
+                                                    }}
+                                                />
+                                                <div
+                                                    className="card-glass p-5 flex-1"
+                                                    style={{
+                                                        background: "var(--pastel-lavender)",
+                                                        border: "1px solid rgba(255,255,255,0.7)",
+                                                    }}
                                                 >
-                                                    <RiGraduationCapLine size={20} style={{ color: "var(--accent)" }} />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <h4
-                                                        className="font-semibold text-sm"
-                                                        style={{ color: "var(--text-primary)" }}
-                                                    >
-                                                        {edu.degree}
-                                                        {edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : ""}
-                                                    </h4>
-                                                    <p className="text-sm" style={{ color: "var(--accent)" }}>
-                                                        {edu.institutionName}
-                                                    </p>
-                                                    <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                                                        {new Date(edu.startDate).getFullYear()} —{" "}
-                                                        {edu.isCurrent
-                                                            ? "Present"
-                                                            : edu.endDate
-                                                              ? new Date(edu.endDate).getFullYear()
-                                                              : ""}
-                                                    </p>
+                                                    <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+                                                        <div className="flex items-start gap-4">
+                                                            <div
+                                                                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                                                                style={{ background: "rgba(255,255,255,0.6)" }}
+                                                            >
+                                                                <RiGraduationCapLine
+                                                                    size={20}
+                                                                    style={{ color: "var(--accent)" }}
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <h4
+                                                                    className="font-semibold text-sm"
+                                                                    style={{ color: "var(--text-primary)" }}
+                                                                >
+                                                                    {edu.degree}
+                                                                    {edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : ""}
+                                                                </h4>
+                                                                <p
+                                                                    className="text-sm"
+                                                                    style={{ color: "var(--accent)" }}
+                                                                >
+                                                                    {edu.institutionName}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            className="tag text-xs"
+                                                            style={{
+                                                                background: "var(--pastel-sky)",
+                                                                color: "var(--text-secondary)",
+                                                            }}
+                                                        >
+                                                            <RiCalendarLine size={11} className="mr-1" />
+                                                            {new Date(edu.startDate).toLocaleDateString("en-US", {
+                                                                month: "short",
+                                                                year: "numeric",
+                                                            })}{" "}
+                                                            —{" "}
+                                                            {edu.isCurrent
+                                                                ? "Present"
+                                                                : edu.endDate
+                                                                  ? new Date(edu.endDate).toLocaleDateString("en-US", {
+                                                                        month: "short",
+                                                                        year: "numeric",
+                                                                    })
+                                                                  : ""}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
 
+                        {/* Certifications */}
                         {/* Certifications */}
                         {profile.certifications?.length > 0 && (
                             <div className="reveal reveal-delay-4">
@@ -244,35 +281,88 @@ export default function About() {
                                 >
                                     Certifications
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {profile.certifications.map((cert, i) => (
-                                        <div
-                                            key={cert._id || i}
-                                            className="card-glass p-5"
-                                            style={{
-                                                background: "var(--pastel-peach)",
-                                                border: "1px solid rgba(255,255,255,0.7)",
-                                            }}
-                                        >
-                                            <h4
-                                                className="font-semibold text-sm mb-1"
-                                                style={{ color: "var(--text-primary)" }}
-                                            >
-                                                {cert.title}
-                                            </h4>
-                                            <p className="text-sm" style={{ color: "var(--accent)" }}>
-                                                {cert.issuingOrganization}
-                                            </p>
-                                            {cert.issueDate && (
-                                                <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
-                                                    {new Date(cert.issueDate).toLocaleDateString("en-US", {
-                                                        month: "short",
-                                                        year: "numeric",
-                                                    })}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ))}
+                                <div className="relative">
+                                    <div
+                                        className="absolute left-5 top-0 bottom-0 w-px"
+                                        style={{ background: "linear-gradient(to bottom, var(--accent), transparent)" }}
+                                    />
+                                    <div className="flex flex-col gap-5">
+                                        {profile.certifications.map((cert, i) => (
+                                            <div key={cert._id || i} className="flex gap-6 pl-14 relative">
+                                                <div
+                                                    className="absolute left-3.5 top-2 w-3 h-3 rounded-full border-2 border-white"
+                                                    style={{
+                                                        background: "var(--accent)",
+                                                        boxShadow: "0 0 0 3px var(--accent-light)",
+                                                    }}
+                                                />
+                                                <div
+                                                    className="card-glass p-5 flex-1"
+                                                    style={{
+                                                        background: "var(--pastel-peach)",
+                                                        border: "1px solid rgba(255,255,255,0.7)",
+                                                    }}
+                                                >
+                                                    <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+                                                        <div>
+                                                            <h4
+                                                                className="font-semibold text-sm"
+                                                                style={{ color: "var(--text-primary)" }}
+                                                            >
+                                                                {cert.title}
+                                                            </h4>
+                                                            <p className="text-sm" style={{ color: "var(--accent)" }}>
+                                                                {cert.issuingOrganization}
+                                                            </p>
+                                                        </div>
+                                                        <span
+                                                            className="tag text-xs"
+                                                            style={{
+                                                                background: "var(--pastel-sky)",
+                                                                color: "var(--text-secondary)",
+                                                            }}
+                                                        >
+                                                            <RiCalendarLine size={11} className="mr-1" />
+                                                            {new Date(cert.issueDate).toLocaleDateString("en-US", {
+                                                                month: "short",
+                                                                year: "numeric",
+                                                            })}{" "}
+                                                            —{" "}
+                                                            {cert.doesNotExpire
+                                                                ? "No Expiry"
+                                                                : cert.expiryDate
+                                                                  ? new Date(cert.expiryDate).toLocaleDateString(
+                                                                        "en-US",
+                                                                        { month: "short", year: "numeric" },
+                                                                    )
+                                                                  : "No Expiry"}
+                                                        </span>
+                                                    </div>
+                                                    {cert.credentialUrl && cert.credentialUrl.trim() !== "" && (
+                                                        <a
+                                                            href={
+                                                                cert.credentialUrl.startsWith("http")
+                                                                    ? cert.credentialUrl
+                                                                    : `https://${cert.credentialUrl}`
+                                                            }
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="tag mt-2 inline-flex items-center gap-1"
+                                                            style={{
+                                                                background: "var(--pastel-mint)",
+                                                                color: "var(--text-secondary)",
+                                                                fontSize: "11px",
+                                                                textDecoration: "none",
+                                                            }}
+                                                        >
+                                                            <RiGlobalLine size={11} />
+                                                            View Credential
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         )}
