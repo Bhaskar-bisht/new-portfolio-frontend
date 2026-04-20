@@ -408,15 +408,23 @@ function ProjectDetailSkeleton() {
     return (
         <div className="min-h-screen px-6 lg:px-12 py-16 animate-pulse">
             <div className="max-w-5xl mx-auto pt-8">
+                {/* Back */}
                 <div className="h-4 bg-gray-100 rounded w-32 mb-8" />
-                <div className="w-full h-72 bg-gray-100 rounded-2xl mb-8" />
+
+                {/* Top 40/60 */}
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-14 mb-8">
+                    <div className="lg:col-span-2 bg-gray-100 rounded-2xl" style={{ minHeight: "340px" }} />
+                    <div className="lg:col-span-3 bg-gray-100 rounded-2xl" style={{ minHeight: "340px" }} />
+                </div>
+
+                {/* Bottom 2col + sidebar */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2 space-y-5">
+                        <div className="h-48 bg-gray-100 rounded-2xl" />
                         <div className="h-32 bg-gray-100 rounded-2xl" />
-                        <div className="h-24 bg-gray-100 rounded-2xl" />
                     </div>
                     <div className="space-y-5">
-                        <div className="h-40 bg-gray-100 rounded-2xl" />
+                        <div className="h-44 bg-gray-100 rounded-2xl" />
                         <div className="h-28 bg-gray-100 rounded-2xl" />
                     </div>
                 </div>
