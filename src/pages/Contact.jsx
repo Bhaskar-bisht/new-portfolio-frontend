@@ -143,30 +143,32 @@ export default function Contact() {
                                     Social Links
                                 </h4>
                                 <div className="flex flex-col gap-3">
-                                    {profile.socialLinks.map((link, i) => {
-                                        const platform = link.platform?.toLowerCase() || "website";
-                                        const Icon = SOCIAL_ICONS[platform] || RiExternalLinkLine;
-                                        const color = SOCIAL_COLORS[platform] || "var(--accent)";
-                                        const bg = PASTEL_BG[platform] || "#f3f4f6";
-                                        return (
-                                            <a
-                                                key={i}
-                                                href={link.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-3 text-sm font-medium transition-opacity hover:opacity-70"
-                                                style={{ color: "var(--text-primary)" }}
-                                            >
-                                                <div
-                                                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                                                    style={{ background: bg }}
+                                    {profile.socialLinks
+                                        .filter((link) => link.isActive)
+                                        .map((link, i) => {
+                                            const platform = link.platform?.toLowerCase() || "website";
+                                            const Icon = SOCIAL_ICONS[platform] || RiExternalLinkLine;
+                                            const color = SOCIAL_COLORS[platform] || "var(--accent)";
+                                            const bg = PASTEL_BG[platform] || "#f3f4f6";
+                                            return (
+                                                <a
+                                                    key={i}
+                                                    href={link.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="flex items-center gap-3 text-sm font-medium transition-opacity hover:opacity-70"
+                                                    style={{ color: "var(--text-primary)" }}
                                                 >
-                                                    <Icon size={16} style={{ color }} />
-                                                </div>
-                                                <span className="capitalize">{link.platform || "Website"}</span>
-                                            </a>
-                                        );
-                                    })}
+                                                    <div
+                                                        className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                        style={{ background: bg }}
+                                                    >
+                                                        <Icon size={16} style={{ color }} />
+                                                    </div>
+                                                    <span className="capitalize">{link.platform || "Website"}</span>
+                                                </a>
+                                            );
+                                        })}
                                 </div>
                             </div>
                         )}
